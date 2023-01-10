@@ -44,7 +44,7 @@ class ValidateState extends GetxController {
   }
 
   setValName() {
-    name = 'please_enter_your_name';
+    name = 'ກາລຸນາໃສ່ຊື່ກ່ອນ';
     update();
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../statemanagement/setting_state.dart';
+import 'package:masscore_web_admin/statemanagement/settings/subject_state.dart';
+import 'package:masscore_web_admin/statemanagement/validate_state.dart';
 
 class SubjectPage extends StatefulWidget {
   @override
@@ -12,13 +12,22 @@ class _SubjectPageState extends State<SubjectPage> {
   String? chooseValue;
   List itemList = ['ໃຊ້ງານ', 'ບໍ່ໃຊ້ງານ'];
   final DataTableSource _data = MyData();
-  SettingState settingState = Get.put(SettingState());
-
+  SubjectState subjectState = Get.put(SubjectState());
+  ValidateState validateState = Get.put(ValidateState());
+  TextEditingController nameT = TextEditingController();
   @override
   void initState() {
     chooseValue = 'ໃຊ້ງານ';
-    settingState.getsubjectData();
+    validateState.name = null;
+    subjectState.getsubjectData();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    nameT.dispose();
+    validateState.name = null;
+    super.dispose();
   }
 
   @override
@@ -66,7 +75,7 @@ class _SubjectPageState extends State<SubjectPage> {
             height: h * 0.006,
           ),
           SizedBox(
-            width: w*0.5,
+            width: w * 0.5,
             child: TextField(
               decoration: InputDecoration(
                 filled: true,
@@ -74,12 +83,11 @@ class _SubjectPageState extends State<SubjectPage> {
                 hintText: 'search'.tr,
                 enabledBorder: OutlineInputBorder(
                   borderSide:
-                  const BorderSide(width: 0.025, color: Colors.grey),
+                      const BorderSide(width: 0.025, color: Colors.grey),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                  const BorderSide(width: 1, color: Colors.blue),
+                  borderSide: const BorderSide(width: 1, color: Colors.blue),
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
@@ -89,7 +97,7 @@ class _SubjectPageState extends State<SubjectPage> {
           SizedBox(
             height: h * 0.006,
           ),
-          GetBuilder<SettingState>(
+          GetBuilder<SubjectState>(
             builder: (getData) {
               if (getData.checkData == true) {
                 return Expanded(
@@ -149,7 +157,7 @@ class _SubjectPageState extends State<SubjectPage> {
       ),
     );
   }
-
+//create modal
   Future createDialog(context) => showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -170,6 +178,7 @@ class _SubjectPageState extends State<SubjectPage> {
                             0.01,
                         fontFamily: 'Noto Sans Lao')),
                 TextField(
+                  controller: nameT,
                   decoration: InputDecoration(
                     hintText: 'ຊື່',
                     enabledBorder: OutlineInputBorder(
@@ -184,6 +193,29 @@ class _SubjectPageState extends State<SubjectPage> {
                     ),
                   ),
                   textInputAction: TextInputAction.done,
+                ),
+                GetBuilder<ValidateState>(builder: (validate) {
+                  if (validate.name != null) {
+                    return Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              validate.name!,
+                              style: TextStyle(
+                                  fontSize: (MediaQuery.of(context).size.width +
+                                          MediaQuery.of(context).size.height) *
+                                      0.012,
+                                  color: Colors.red),
+                            ),
+                          ),
+                        ],
+                    );
+                  } else {
+                    return Container();
+                  }
+                }),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.02,
                 ),
                 Text('status'.tr,
                     style: TextStyle(
@@ -253,9 +285,177 @@ class _SubjectPageState extends State<SubjectPage> {
                           onPrimary: Colors.white, // foreground
                         ),
                         onPressed: () {
-
+                          if (nameT.text.trim().isEmpty) {
+                            validateState.setValName();
+                          } else {
+                            validateState.name = null;
+                          }
+                          validateState.update();
+                          //use login function
+                          if (nameT.text.trim().isNotEmpty) {
+                            subjectState.postSave(
+                                name: nameT.text, active: true);
+                            setState(() {
+                               nameT.text = '';
+                               Navigator.pop(context);
+                            });
+                          }
                         },
                         child: Text('save'.tr),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+//edit modal
+  Future updateDialog(context,index) => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('edit'.tr,
+              style: TextStyle( 
+                  fontWeight: FontWeight.bold, fontFamily: 'Noto Sans Lao')),
+          content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('name'.tr,
+                    style: TextStyle(
+                        fontSize: (MediaQuery.of(context).size.width +
+                                MediaQuery.of(context).size.height) *
+                            0.01,
+                        fontFamily: 'Noto Sans Lao')),
+                TextField(
+                  controller: nameT,
+                  decoration: InputDecoration(
+                    hintText: 'ຊື່',
+                    enabledBorder: OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(width: 1, color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(width: 1, color: Colors.blue),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  textInputAction: TextInputAction.done,
+                ),
+                GetBuilder<ValidateState>(builder: (validate) {
+                  if (validate.name != null) {
+                    return Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              validate.name!,
+                              style: TextStyle(
+                                  fontSize: (MediaQuery.of(context).size.width +
+                                          MediaQuery.of(context).size.height) *
+                                      0.012,
+                                  color: Colors.red),
+                            ),
+                          ),
+                        ],
+                    );
+                  } else {
+                    return Container();
+                  }
+                }),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.02,
+                ),
+                Text('status'.tr,
+                    style: TextStyle(
+                        fontSize: (MediaQuery.of(context).size.width +
+                                MediaQuery.of(context).size.height) *
+                            0.01,
+                        fontFamily: 'Noto Sans Lao')),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.004,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: DropdownButton(
+                      hint: Text("ເລືອກ"),
+                      dropdownColor: Colors.white,
+                      icon: Icon(Icons.arrow_drop_down),
+                      iconSize: 36,
+                      isExpanded: true,
+                      underline: SizedBox(),
+                      value: chooseValue,
+                      onChanged: (newValue) {
+                        setState(() {
+                          chooseValue = newValue.toString();
+                        });
+                      },
+                      items: itemList.map((valueItem) {
+                        return DropdownMenuItem(
+                          value: valueItem,
+                          child: Text(valueItem),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }),
+          actions: [
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: Text('ຍົກເລີກ',
+                          style: TextStyle(
+                              fontSize: (MediaQuery.of(context).size.width +
+                                      MediaQuery.of(context).size.height) *
+                                  0.008,
+                              color: Colors.red,
+                              fontFamily: 'Noto Sans Lao'))),
+                  Padding(
+                    padding: EdgeInsets.only(left: 2.0),
+                    child: SizedBox(
+                      width: 70,
+                      height: 30,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.green, // background
+                          onPrimary: Colors.white, // foreground
+                        ),
+                        onPressed: () {
+                          if (nameT.text.trim().isEmpty) {
+                            validateState.setValName();
+                          } else {
+                            validateState.name = null;
+                          }
+                          validateState.update();
+                          //use login function
+                          if (nameT.text.trim().isNotEmpty) {
+                            subjectState.postUpdate(
+                                id: 1,name: nameT.text, active: true);
+                            setState(() {
+                               nameT.text = '';
+                               Navigator.pop(context);
+                            });
+                          }
+                        },
+                        child: Text('edit'.tr),
                       ),
                     ),
                   ),
@@ -268,13 +468,15 @@ class _SubjectPageState extends State<SubjectPage> {
 }
 
 class MyData extends DataTableSource {
-  SettingState settingState = Get.put(SettingState());
+  SubjectState subjectState = Get.put(SubjectState());
   @override
   DataRow? getRow(int index) {
     return DataRow(cells: [
       DataCell(Text('${index + 1}')),
-      DataCell(Text(settingState.subjectdataList[index]['title'])),
-      DataCell(Text('ໃຊ້ງານ')),
+      DataCell(Text(subjectState.subjectdataList[index]['name'])),
+      subjectState.subjectdataList[index]['active'] == true
+          ? DataCell(Text('active'.tr))
+          : DataCell(Text('no_active'.tr)),
       DataCell(
         Expanded(
           child: Row(
@@ -286,7 +488,9 @@ class MyData extends DataTableSource {
                   primary: Colors.yellow, // background
                   onPrimary: Colors.black, // foreground
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  
+                },
                 child: Row(
                   children: [
                     Icon(
@@ -305,7 +509,9 @@ class MyData extends DataTableSource {
                   primary: Colors.red, // background
                   onPrimary: Colors.white, // foreground
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  
+                },
                 child: Row(
                   children: [
                     Icon(
@@ -325,11 +531,10 @@ class MyData extends DataTableSource {
       ),
     ]);
   }
-
   @override
   bool get isRowCountApproximate => false;
   @override
-  int get rowCount => settingState.subjectdataList.length;
+  int get rowCount => subjectState.subjectdataList.length;
   @override
   // TODO: implement selectedRowCount
   int get selectedRowCount => 0;

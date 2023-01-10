@@ -77,7 +77,9 @@ class LocaleString extends Translations {
           'born_village': 'Born Village',
           'born_district': 'Born District',
           'born_province': 'Born Province',
-          'mass_position': 'Mass Position'
+          'mass_position': 'Mass Position',
+          'active': 'Active',
+          'no_active': 'No Active'
         },
         'la_LA': {
           'app_name': 'ລະບົບເຕັກໂນໂລຊີ ຂໍ້ມູນຂ່າວສານ ບໍລິສັດ ໝາກເກົາລາວ',
@@ -152,7 +154,9 @@ class LocaleString extends Translations {
           'born_village': 'ບ້ານເກີດ',
           'born_district': 'ເມືອງເກີດ',
           'born_province': 'ແຂວງເກີດ',
-          'mass_position': 'ຕໍາແໜ່ງໝາກເກົາ'
+          'mass_position': 'ຕໍາແໜ່ງໝາກເກົາ',
+          'active': 'ໃຊ້ງານ',
+          'no_active': 'ບໍ່ໃຊ້ງານ'
         }
       };
 }
