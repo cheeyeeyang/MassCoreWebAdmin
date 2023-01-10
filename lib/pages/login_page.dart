@@ -205,12 +205,10 @@ class _LoginPageState extends State<LoginPage> {
                             //use login function
                             if (usernameT.text.trim().isNotEmpty &&
                                 passwordT.text.trim().isNotEmpty) {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => HomePage()));
-                              // authState.postSignIn(
-                              //     context: context,
-                              //     username: usernameT.text,
-                              //     password: passwordT.text);
+                              authState.postSignIn(
+                                  context: context,
+                                  username: usernameT.text,
+                                  password: passwordT.text);
                             }
                           },
                           child: Center(

@@ -39,7 +39,7 @@ class AuthState extends GetxController {
       if (res.statusCode == 200) {
         print('login success');
         await appVerification.setNewToken(text: jsonDecode(res.body)['token']);
-        // await checkToken();
+        await checkToken();
         signCheck = true;
         Navigator.push(
             context, new MaterialPageRoute(builder: (context) => HomePage()));
@@ -58,7 +58,7 @@ class AuthState extends GetxController {
   checkToken() async {
     if (appVerification.token == '') {
     } else {
-      // await getUser();
+      await getUser();
     }
   }
 
@@ -66,10 +66,10 @@ class AuthState extends GetxController {
   getUser() async {
     checkUser = false;
     update();
-    var res = await http.get(Uri.parse('http://192.168.43.75:80/api/user'),
+    var res = await http.get(Uri.parse('https://localhost:7047/api/Authenticate/User'),
         headers: {'authorization': 'Bearer ${appVerification.token}'});
     if (res.statusCode == 200) {
-      var dataUser = jsonDecode(res.body)['user'];
+      var dataUser = jsonDecode(res.body);
       userModel = UserModel.fromJson(dataUser);
       checkUser = true;
       update();

@@ -11,6 +11,7 @@ import 'package:masscore_web_admin/pages/religion_page.dart';
 import 'package:masscore_web_admin/pages/subject_page.dart';
 import 'package:masscore_web_admin/pages/theory_page.dart';
 import 'package:masscore_web_admin/pages/user_page.dart';
+import 'package:masscore_web_admin/statemanagement/auth_state.dart';
 import 'package:masscore_web_admin/widgets/custom_text.dart';
 import '../statemanagement/app_verification.dart';
 import '../statemanagement/home_state.dart';
@@ -149,14 +150,22 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                             ),
-                            Text(
-                              'Admin',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  fontFamily: 'Noto Sans Lao'),
-                            ),
+                            GetBuilder<AuthState>(builder: (getUser) {
+                              if (getUser.checkUser == true) {
+                                return Text(
+                                  getUser.userModel!.userName!.toString(),
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                      fontFamily: 'Noto Sans Lao'),
+                                );
+                              } else {
+                                return Container(
+                                  height: 0,
+                                );
+                              }
+                            })
                           ],
                         ),
                       )),
@@ -177,61 +186,82 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             ExpansionTile(
-              title: Text('setting'.tr, style: TextStyle(
-                fontFamily: 'Noto Sans Lao',
-              ),),
+              title: Text(
+                'setting'.tr,
+                style: TextStyle(
+                  fontFamily: 'Noto Sans Lao',
+                ),
+              ),
               leading: Icon(Icons.settings), //add icon
               childrenPadding: EdgeInsets.only(left: 60), //children padding
               children: [
                 ListTile(
-                  title: Text('subject'.tr, style: TextStyle(
-                    fontFamily: 'Noto Sans Lao',
-                  ),),
+                  title: Text(
+                    'subject'.tr,
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans Lao',
+                    ),
+                  ),
                   onTap: () {
                     homeState.setCurrentPage(1);
                     Navigator.pop(context);
                   },
                 ),
                 ListTile(
-                  title: Text('theory'.tr, style: TextStyle(
-                    fontFamily: 'Noto Sans Lao',
-                  ),),
+                  title: Text(
+                    'theory'.tr,
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans Lao',
+                    ),
+                  ),
                   onTap: () {
                     homeState.setCurrentPage(2);
                     Navigator.pop(context);
                   },
                 ),
                 ListTile(
-                  title: Text('ethnicity'.tr, style: TextStyle(
-                    fontFamily: 'Noto Sans Lao',
-                  ),),
+                  title: Text(
+                    'ethnicity'.tr,
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans Lao',
+                    ),
+                  ),
                   onTap: () {
                     homeState.setCurrentPage(3);
                     Navigator.pop(context);
                   },
                 ),
                 ListTile(
-                  title: Text('religion'.tr, style: TextStyle(
-                    fontFamily: 'Noto Sans Lao',
-                  ),),
+                  title: Text(
+                    'religion'.tr,
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans Lao',
+                    ),
+                  ),
                   onTap: () {
                     homeState.setCurrentPage(4);
                     Navigator.pop(context);
                   },
                 ),
                 ListTile(
-                  title: Text('goverment_position'.tr, style: TextStyle(
-                    fontFamily: 'Noto Sans Lao',
-                  ),),
+                  title: Text(
+                    'goverment_position'.tr,
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans Lao',
+                    ),
+                  ),
                   onTap: () {
                     homeState.setCurrentPage(5);
                     Navigator.pop(context);
                   },
                 ),
                 ListTile(
-                  title: Text('organization_position'.tr, style: TextStyle(
-                    fontFamily: 'Noto Sans Lao',
-                  ),),
+                  title: Text(
+                    'organization_position'.tr,
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans Lao',
+                    ),
+                  ),
                   onTap: () {
                     homeState.setCurrentPage(6);
                     Navigator.pop(context);
@@ -247,77 +277,108 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             ExpansionTile(
-              title: Text('module'.tr, style: TextStyle(
-                fontFamily: 'Noto Sans Lao',
-              ),),
+              title: Text(
+                'module'.tr,
+                style: TextStyle(
+                  fontFamily: 'Noto Sans Lao',
+                ),
+              ),
               leading: Icon(Icons.view_module), //add icon
               childrenPadding: EdgeInsets.only(left: 60), //children padding
               children: [
                 ListTile(
-                  title: Text('economic_fund_money'.tr, style: TextStyle(
-                    fontFamily: 'Noto Sans Lao',
-                  ),),
+                  title: Text(
+                    'economic_fund_money'.tr,
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans Lao',
+                    ),
+                  ),
                   onTap: () {},
                 ),
                 ListTile(
-                  title: Text('movement_statistic'.tr, style: TextStyle(
-                    fontFamily: 'Noto Sans Lao',
-                  ),),
+                  title: Text(
+                    'movement_statistic'.tr,
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans Lao',
+                    ),
+                  ),
                   onTap: () {},
                 ),
                 ListTile(
-                  title: Text('investment_project'.tr, style: TextStyle(
-                    fontFamily: 'Noto Sans Lao',
-                  ),),
+                  title: Text(
+                    'investment_project'.tr,
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans Lao',
+                    ),
+                  ),
                   onTap: () {},
                 ),
                 ListTile(
-                  title: Text('dividend'.tr, style: TextStyle(
-                    fontFamily: 'Noto Sans Lao',
-                  ),),
+                  title: Text(
+                    'dividend'.tr,
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans Lao',
+                    ),
+                  ),
                   onTap: () {},
                 ),
-
               ],
             ),
             ExpansionTile(
-              title: Text('report'.tr, style: TextStyle(
-                fontFamily: 'Noto Sans Lao',
-              ),),
+              title: Text(
+                'report'.tr,
+                style: TextStyle(
+                  fontFamily: 'Noto Sans Lao',
+                ),
+              ),
               leading: Icon(Icons.report), //add icon
               childrenPadding: EdgeInsets.only(left: 60), //children padding
               children: [
                 ListTile(
-                  title: Text('consolidated_report'.tr, style: TextStyle(
-                    fontFamily: 'Noto Sans Lao',
-                  ),),
+                  title: Text(
+                    'consolidated_report'.tr,
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans Lao',
+                    ),
+                  ),
                   onTap: () {},
                 ),
                 ListTile(
-                  title: Text('member_mass_organization'.tr, style: TextStyle(
-                    fontFamily: 'Noto Sans Lao',
-                  ),),
+                  title: Text(
+                    'member_mass_organization'.tr,
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans Lao',
+                    ),
+                  ),
                   onTap: () {},
                 ),
                 ListTile(
-                  title: Text('investment_project_report'.tr, style: TextStyle(
-                    fontFamily: 'Noto Sans Lao',
-                  ),),
+                  title: Text(
+                    'investment_project_report'.tr,
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans Lao',
+                    ),
+                  ),
                   onTap: () {},
                 ),
                 ListTile(
-                  title: Text('dividend_report'.tr, style: TextStyle(
-                    fontFamily: 'Noto Sans Lao',
-                  ),),
+                  title: Text(
+                    'dividend_report'.tr,
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans Lao',
+                    ),
+                  ),
                   onTap: () {},
                 ),
                 ListTile(
-                  title: Text('report_giving_statistic'.tr, style: TextStyle(
-                    fontFamily: 'Noto Sans Lao',
-                  ),),
+                  title: Text(
+                    'report_giving_statistic'.tr,
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans Lao',
+                    ),
+                  ),
                   onTap: () {},
                 ),
-
               ],
             ),
             InkWell(
